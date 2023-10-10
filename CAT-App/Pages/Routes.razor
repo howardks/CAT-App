@@ -1,0 +1,37 @@
+﻿@page "/routes"
+
+@using CAT_App.Data;
+
+<h3>Routes</h3>
+@if (routes == null)
+{
+    <p>Error! No available routes.</p>
+}
+else
+{
+    <table class="table">
+        <tbody>
+            @foreach (var route in routes)
+            {
+                <tr>
+                    <td class="symbol-circle" style="background-color: @route.Color.ToHex()">@route.Symbol</td>
+                    <td>@route.Name</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<style>
+    .symbol-circle {
+        border-radius: 50%;
+        border: 0px solid #ffffff;
+        color: #ffffff;
+        text-align: center;
+        padding: 4px;
+    }
+</style>
+
+@code {
+    private Route[] routes = RouteService.routes;
+}

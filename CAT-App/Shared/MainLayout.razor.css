@@ -20,13 +20,6 @@ main {
     align-items: center;
 }
 
-.footer {
-    background-image: linear-gradient(0deg, #0a5f2a, #c4dc84);
-    justify-content: space-between;
-    height: 3.5rem;
-    display: flex;
-}
-
     .top-row ::deep a, .top-row ::deep .btn-link {
         white-space: nowrap;
         margin-left: 1.5rem;
@@ -41,6 +34,13 @@ main {
         overflow: hidden;
         text-overflow: ellipsis;
     }
+
+.footer {
+    background-image: linear-gradient(0deg, #0a5f2a, #c4dc84);
+    justify-content: space-between;
+    height: 3.5rem;
+    display: flex;
+}
 
 @media (max-width: 640.98px) {
     .top-row:not(.auth) {
