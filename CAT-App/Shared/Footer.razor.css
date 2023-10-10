@@ -1,2 +1,26 @@
-﻿body {
+﻿.footer {
+    padding: 10px;
+}
+
+.footer-content {
+    display: flex;
+    align-items: center; 
+    width: 100%;
+}
+
+.left-content {
+    display: flex;
+    align-items: center; 
+    margin-left: 5px;
+}
+
+.right-content {
+    display: flex;
+    align-items: center; 
+    justify-content: flex-end;
+    margin-right: 5px;
+}
+
+.footer .oi-person {
+    margin-right: 5px;
 }
