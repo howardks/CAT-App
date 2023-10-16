@@ -1,7 +1,29 @@
 ﻿@page "/"
 
-<h1>Hello, world!</h1>
+@using CAT_App.Data;
 
-Welcome to your new app.
+<img src="/images/fountain.jpg" style="width:100%"/>
+@if (news == null)
+{
+	<p>Error! No available news.</p>
+}
+else
+{
+	<p />
+	<h4 style="font-weight:normal;border-bottom:1px solid gray">Recent News</h4>
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+	<table class="table">
+		<tbody>
+			@foreach (var item in news)
+			{
+				<tr>
+					<td>@item.ToString()</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+}
+
+@code {
+	private NewsItem[] news = NewsItemService.news;
+}
