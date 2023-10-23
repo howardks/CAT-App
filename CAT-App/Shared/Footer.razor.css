@@ -1,26 +1,14 @@
-﻿.footer {
-    padding: 10px;
-}
-
-.footer-content {
-    display: flex;
-    align-items: center; 
+﻿.flex-container {
     width: 100%;
-}
-
-.left-content {
     display: flex;
-    align-items: center; 
-    margin-left: 5px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0px 12px;
 }
 
-.right-content {
-    display: flex;
-    align-items: center; 
-    justify-content: flex-end;
-    margin-right: 5px;
-}
-
-.footer .oi-person {
-    margin-right: 5px;
+#account {
+    background-color: transparent;
+    padding: 4px;
+    border-radius: 50px;
 }
