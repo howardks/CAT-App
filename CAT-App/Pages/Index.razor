@@ -2,13 +2,18 @@
 
 @using CAT_App.Data;
 
-<img src="/images/fountain.jpg" style="width:100%"/>
+<img src="/images/fountain.jpg" style="width:100%" />
 @if (news == null)
 {
 	<p>Error! No available news.</p>
 }
 else
 {
+	<p />
+	<div class="flex-container">
+		<button>Login</button>
+		<button>LiveMap</button>
+	</div>
 	<p />
 	<h4 style="font-weight:normal;border-bottom:1px solid gray">Recent News</h4>
 
