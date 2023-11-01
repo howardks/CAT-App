@@ -1,7 +1,27 @@
 ﻿@page "/login"
 
-<h3>Login</h3>
+@using CAT_App.Data;
+
+<img src="/images/fountain.jpg" />
+<p />
+<h4>Login</h4>
+<p />
+<form class="login-form">
+    <label for="username">Username: </label>
+    <br />
+    <input id="username" type="text" placeholder="username" />
+    <p />
+    <label for="password">Password: </label>
+    <br />
+    <input id="password" type="password" placeholder="password" />
+    <p />
+    <div class="flex-container">
+        <input type="button" value="Login" />
+        <input type="button" value="Sign Up" />
+    </div>
+</form>
+
 
 @code {
-
+    
 }

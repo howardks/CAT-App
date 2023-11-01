@@ -43,6 +43,16 @@ main {
         text-overflow: ellipsis;
     }
 
+.content ::deep img {
+    width: 100%;
+    border-radius: 5px;
+}
+
+.content ::deep h4 {
+    font-weight: normal;
+    border-bottom: 2px solid #0a5f2a;
+}
+
 .content ::deep .flex-container {
     width: 100%;
     display: flex;
@@ -54,6 +64,18 @@ main {
 .content ::deep button {
     background-image: linear-gradient(0deg, #0a5f2a, #c4dc84);
     color: white;
+    border-radius: 5px;
+}
+
+.content ::deep input[type=button] {
+    background-image: linear-gradient(0deg, #0a5f2a, #c4dc84);
+    color: white;
+    border-radius: 5px;
+    width: 46%;
+}
+
+.content ::deep input[type=text], .content ::deep input[type=password] {
+    width: 100%;
 }
 
 .footer ::deep .flex-container {

@@ -3,7 +3,7 @@
 @using CAT_App.Data;
 @inject NavigationManager NavigationManager
 
-<img src="/images/fountain.jpg" style="width:100%" />
+<img src="/images/fountain.jpg" />
 @if (news == null)
 {
 	<p>Error! No available news.</p>
@@ -16,7 +16,7 @@ else
 		<button @onclick="NavigateToLiveMap">LiveMap</button>
 	</div>
 	<p />
-	<h4 style="font-weight:normal;border-bottom:1px solid gray">Recent News</h4>
+	<h4>Recent News</h4>
 
 	<table class="table">
 		<tbody>
