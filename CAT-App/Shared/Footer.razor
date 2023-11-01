@@ -1,10 +1,15 @@
-﻿<div class="footer flex-container">
-	<button id="account" class="oi oi-person"></button>
+﻿@inject NavigationManager NavigationManager
+
+<div class="footer flex-container">
+	<button id="account" class="oi oi-person" @onclick="NavigateToLogin"></button>
 	<div>
 		© CAT 2023
 	</div>
 </div>
 
 @code {
-
+	private void NavigateToLogin()
+	{
+		NavigationManager.NavigateTo("login");
+	}
 }
