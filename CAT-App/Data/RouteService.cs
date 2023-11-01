@@ -2,7 +2,8 @@
 {
     public class RouteService
     {
-        public static readonly Route[] routes = new[] {
+        public static readonly Route[] routes = new[] 
+        {
             new Route("3B", "3B Augusta Ave", Colors.Orange),
             new Route("3", "3 West Chatham/Sav HHI Airport", Colors.Brown),
             new Route("4", "4 Barnard", Colors.LightBlue),
@@ -19,7 +20,5 @@
             new Route("29", "29 Gwinnett Cloverdale", Colors.DarkCyan),
             new Route("31", "31 Skidaway/Sandfly", Colors.HotPink)
         };
-
-        
     }
 }
