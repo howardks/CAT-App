@@ -1,7 +1,31 @@
 ﻿@page "/fares"
 
+@using CAT_App.Data;
+
 <h3>Fares</h3>
+@if (fares == null)
+{
+    <p>Error! No available fares.</p>
+}
+else
+{
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Type</th>
+                <th>Cost Per Trip</th>
+            </tr>
+            @foreach (var fare in fares)
+            {
+                <tr>
+                    <td>@fare.Type</td>
+                    <td>@fare.FormattedCost()</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
 
 @code {
-
+    private Fare[] fares = FareService.fares;
 }

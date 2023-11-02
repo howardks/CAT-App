@@ -7,5 +7,11 @@
 #account {
     background-color: transparent;
     padding: 4px;
-    border-radius: 50px;
+    border: none;
+}
+
+a {
+    color: black;
+    margin-left: 4px;
+    text-decoration: none;
 }

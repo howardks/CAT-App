@@ -1,8 +1,9 @@
 ﻿@page "/"
 
 @using CAT_App.Data;
+@inject NavigationManager NavigationManager
 
-<img src="/images/fountain.jpg" style="width:100%" />
+<img src="/images/fountain.jpg" />
 @if (news == null)
 {
 	<p>Error! No available news.</p>
@@ -11,11 +12,11 @@ else
 {
 	<p />
 	<div class="flex-container">
-		<button>Login</button>
-		<button>LiveMap</button>
+		<button @onclick="NavigateToLogin">Login</button>
+		<button @onclick="NavigateToLiveMap">LiveMap</button>
 	</div>
 	<p />
-	<h4 style="font-weight:normal;border-bottom:1px solid gray">Recent News</h4>
+	<h4>Recent News</h4>
 
 	<table class="table">
 		<tbody>
@@ -31,4 +32,14 @@ else
 
 @code {
 	private NewsItem[] news = NewsItemService.news;
+
+	private void NavigateToLogin()
+	{
+		NavigationManager.NavigateTo("login");
+	}
+
+	private void NavigateToLiveMap()
+	{
+		NavigationManager.NavigateTo("livemap");
+	}
 }
