@@ -1,9 +1,14 @@
-﻿@inject NavigationManager NavigationManager
+﻿@using CAT_App.Data;
+@inject NavigationManager NavigationManager
 
 <div class="footer flex-container">
-	<button id="account" class="oi oi-person" @onclick="NavigateToLogin"></button>
+    <div>
+        © CAT 2023
+    </div>
+	
 	<div>
-		© CAT 2023
+		<button id="account" class="oi oi-person" @onclick="NavigateToLogin"></button>
+		<a class="@(LoggedIn()? "d-show" : "d-none")" href="">Logout</a>
 	</div>
 </div>
 
@@ -11,5 +16,10 @@
 	private void NavigateToLogin()
 	{
 		NavigationManager.NavigateTo("login");
+	}
+
+	private bool LoggedIn()
+	{
+		return User.LoggedIn;
 	}
 }

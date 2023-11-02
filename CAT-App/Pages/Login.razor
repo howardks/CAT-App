@@ -9,19 +9,36 @@
 <form class="login-form">
     <label for="username">Username: </label>
     <br />
-    <input id="username" type="text" placeholder="username" />
+    <input id="username" type="text" placeholder="username" @bind-value="username"/>
     <p />
     <label for="password">Password: </label>
     <br />
-    <input id="password" type="password" placeholder="password" />
+    <input id="password" type="password" placeholder="password" @bind-value="password"/>
     <p />
     <div class="flex-container">
-        <input type="button" value="Login" />
-        <input type="button" value="Sign Up" />
+        <input type="button" value="Login" @onclick="LoginUser"/>
+        <input type="button" value="Sign Up" @onclick="RegisterUser"/>
+        <input type="button" value="Clear" @onclick="ClearFields" />
     </div>
 </form>
 
 
 @code {
-    
+    string username, password;
+
+    private void RegisterUser()
+    {
+        
+    }
+
+    private void LoginUser()
+    {
+        
+    }
+
+    private void ClearFields()
+    {
+        username = "";
+        password = "";
+    }
 }
