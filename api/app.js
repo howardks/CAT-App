@@ -1,5 +1,5 @@
 import express from 'express';
-import routeInfo from './routes.js'; 
+import routeInfo from './routes/routes.js'; 
 
 const app = express();
 
@@ -17,5 +17,3 @@ const setup = async() => {
     });
 }
 setup();
-
-// https://www.youtube.com/watch?v=qdV9S7UE99o
