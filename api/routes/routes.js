@@ -32,7 +32,7 @@ router.post('/register', async (req, res) => {
     const passwordRepeat = req.query.passwordRepeat;
     let response;
     let responseStatus;
-    
+
     if (password !== passwordRepeat) {
         response = { 'response': 'Passwords must match' };
         responseStatus = 400;
@@ -42,10 +42,10 @@ router.post('/register', async (req, res) => {
         const db = await dbPromise;
         await db.run('INSERT INTO USER (username, password) VALUES (?, ?)', username, passwordHash
         ).then(() => {
-            response = { 'response': 'Registered successfully' }; 
+            response = { 'response': 'Registered successfully' };
             responseStatus = 201;
         }).catch(() => {
-            response = { 'response': 'Username unavailable' }; 
+            response = { 'response': 'Username unavailable' };
             responseStatus = 400;
         });
     }
@@ -55,42 +55,105 @@ router.post('/register', async (req, res) => {
 
 router.post('/login', async (req, res) => {
     const username = req.query.username;
-    const password = req.query.password || null;
+    const password = req.query.password;
     let response;
     let responseStatus;
 
     const db = await dbPromise;
-    
-    await db.get('SELECT * FROM USER WHERE username=\'' + username + '\'', []
+
+    await db.get('SELECT * FROM USER WHERE username=?', username
     ).then(async (row) => {
         await bcrypt.compare(password, row.password
         ).then((result) => {
             if (result) {
                 response = {
                     'success': true,
-                    'username': row.username, 
+                    'username': row.username,
                     'balance': row.balance
                 };
                 responseStatus = 200;
             } else {
-                response = { 
+                response = {
                     'success': false,
-                    'response': 'Incorrect password' 
+                    'response': 'Incorrect password'
                 };
                 responseStatus = 400;
             }
         }).catch((err2) => {
-            response = { 
+            response = {
                 'success': false,
-                'response': 'Missing password' 
+                'response': 'Missing password'
             };
             responseStatus = 400;
         });
 
     }).catch((err) => {
-        response = { 
+        response = {
             'success': false,
-            'response': 'Username does not exist' 
+            'response': 'Username does not exist'
+        };
+        responseStatus = 400;
+    });
+
+    res.status(responseStatus).json(response);
+});
+
+router.patch('/updateBalance', async (req, res) => { // This may be less redundant if more authentication is added
+    const username = req.query.username;
+    const password = req.query.password;
+    const increase = parseFloat(req.query.increase);
+    let response;
+    let responseStatus;
+
+    const db = await dbPromise;
+
+    await db.get('SELECT * FROM USER WHERE username=?', username
+    ).then(async (row) => {
+        await bcrypt.compare(password, row.password
+        ).then(async (result) => {
+            if (result) {
+                await db.run('UPDATE USER SET balance=? WHERE username=?', [row.balance + increase, username]
+                ).then(async () => {
+                    await db.get('SELECT * FROM USER WHERE username=?', username
+                    ).then((row) => {
+                        response = {
+                            'success': true,
+                            'username': row.username,
+                            'balance': row.balance
+                        };
+                        responseStatus = 200;
+                    }).catch((err4) => {
+                        response = {
+                            'success': false,
+                            'response': 'Error retrieving user'
+                        };
+                        responseStatus = 400;
+                    });
+                }).catch((err3) => {
+                    response = {
+                        'success': false,
+                        'response': 'Error updating balance'
+                    };
+                    responseStatus = 400;
+                });
+            } else {
+                response = {
+                    'success': false,
+                    'response': 'Incorrect password'
+                };
+                responseStatus = 400;
+            }
+        }).catch((err2) => {
+            response = {
+                'success': false,
+                'response': 'Missing password'
+            };
+            responseStatus = 400;
+        });
+    }).catch((err) => {
+        response = {
+            'success': false,
+            'response': 'Username does not exist'
         };
         responseStatus = 400;
     });
@@ -99,6 +162,6 @@ router.post('/login', async (req, res) => {
 });
 
 export default {
-    router, 
+    router,
     dbPromise
 }
