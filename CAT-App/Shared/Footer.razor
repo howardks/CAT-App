@@ -7,19 +7,32 @@
     </div>
 	
 	<div>
-		<button id="account" class="oi oi-person" @onclick="NavigateToLogin"></button>
-		<a class="@(LoggedIn()? "d-show" : "d-none")" href="">Logout</a>
+		<button class="oi oi-person footer-button" @onclick="NavigateToAccount"></button>
+		<button class="@(LoggedIn()? "d-show" : "d-none") footer-button" @onclick="Logout">Logout</button>
 	</div>
 </div>
 
 @code {
-	private void NavigateToLogin()
+	private void NavigateToAccount()
 	{
-		NavigationManager.NavigateTo("login");
+		if (User.LoggedIn)
+		{
+			NavigationManager.NavigateTo("account");
+		}
+		else
+		{
+			NavigationManager.NavigateTo("login");
+		}
 	}
 
 	private bool LoggedIn()
 	{
 		return User.LoggedIn;
+	}
+
+	private void Logout()
+	{
+		User.Logout();
+		NavigationManager.NavigateTo("");
 	}
 }
