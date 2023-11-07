@@ -2,7 +2,7 @@
 {
     public class User
     {
-        public static bool LoggedIn { get; } = false;
+        public static bool LoggedIn { get; set; } = false;
         public static string Username { get; set; }
         public static string Password { get; set; }
 

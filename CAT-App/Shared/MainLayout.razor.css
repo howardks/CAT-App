@@ -72,7 +72,7 @@ main {
     background-image: linear-gradient(0deg, #0a5f2a, #c4dc84);
     color: white;
     border-radius: 5px;
-    width: 30%;
+    width: 46%;
 }
 
 .content ::deep input[type=text], .content ::deep input[type=password] {
