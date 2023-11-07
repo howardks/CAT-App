@@ -26,7 +26,7 @@ router.get('/users', async (req, res) => {
 });
 
 router.post('/register', async (req, res) => {
-    console.log(req.query);
+    console.log("Query: " + req.query);
     const username = req.query.username;
     const password = req.query.password;
     const passwordRepeat = req.query.passwordRepeat;

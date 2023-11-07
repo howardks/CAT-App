@@ -1,6 +1,7 @@
 ﻿@page "/signup"
 
 @inject NavigationManager NavigationManager
+@using CAT_App.Data;
 
 <img src="/images/fountain.jpg" />
 <p />
@@ -31,6 +32,12 @@
     private void RegisterUser()
     {
         // Do all the registration stuff
+        if (username != null && !username.Equals("") &&
+            password != null && !password.Equals("") &&
+            passwordRepeat != null && !passwordRepeat.Equals(""))
+        {
+            User.Register(username, password, passwordRepeat);
+        }
 
 
         // Then nav to login so the user can login
