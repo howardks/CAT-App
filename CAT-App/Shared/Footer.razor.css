@@ -4,7 +4,7 @@
     height: 3.5rem;
 }
 
-#account {
+.footer-button {
     background-color: transparent;
     padding: 4px;
     border: none;
