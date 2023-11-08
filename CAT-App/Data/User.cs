@@ -8,10 +8,11 @@ namespace CAT_App.Data
 		private static readonly HttpClient httpClient = new HttpClient();
 
 		public static bool LoggedIn { get; set; } = true;
-        public static string Username { get; set; }
+        public static string Username { get; set; } 
         public static string Password { get; set; }
         public static string Type { get; set; }
         public static double Balance { get; set; }
+		public static string[][] History { get; set; } 
 
         public static void Logout()
         {
@@ -20,6 +21,7 @@ namespace CAT_App.Data
             Password = null;
             Type = null;
             Balance = 0;
+            History = null;
         }
 
         // Maybe stuff for connecting to api here? 
@@ -48,6 +50,11 @@ namespace CAT_App.Data
         public static void UpdateBalance(double increase)
         {
 
+        }
+
+        public static string GetBalance()
+        {
+            return String.Format("{0:C2}", Balance);
         }
     }
 }

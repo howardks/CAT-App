@@ -12,7 +12,7 @@ else
 {
 	<p />
 	<div class="flex-container">
-		<button @onclick="NavigateToLogin">Login</button>
+		<button @onclick="NavigateToAccount">@(LoggedIn() ? "Account" : "Login")</button>
 		<button @onclick="NavigateToLiveMap">LiveMap</button>
 	</div>
 	<p />
@@ -33,9 +33,21 @@ else
 @code {
 	private NewsItem[] news = NewsItemService.news;
 
-	private void NavigateToLogin()
+	private bool LoggedIn()
 	{
-		NavigationManager.NavigateTo("login");
+		return User.LoggedIn;
+	}
+
+	private void NavigateToAccount()
+	{
+		if (User.LoggedIn)
+		{
+			NavigationManager.NavigateTo("account");
+		}
+		else
+		{
+			NavigationManager.NavigateTo("login");
+		}
 	}
 
 	private void NavigateToLiveMap()
