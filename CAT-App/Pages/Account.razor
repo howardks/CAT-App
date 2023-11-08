@@ -1,7 +1,65 @@
 ﻿@page "/account"
 
-<h3>Account</h3>
+@using CAT_App.Data;
+
+<h3>Welcome, @User.Username!</h3>
+<p />
+<div width="100%" style="text-align: center">
+	<span class="oi oi-wifi" />
+	<br />
+	Hold Pass Next To Scanner
+	<p />
+	<img src="/images/adultCard.png" />
+	<p />
+	Current Balance
+	<h3>@User.GetBalance()</h3>
+	<p />
+	<button>Reload Card</button>
+	<button @onclick="@ChangeMode">@(GetShowHistory() ? "Hide History" : "Show History")</button>
+	<div class="@(GetShowHistory()? "d-show" : "d-none")">
+		<p />
+		<table class="table">
+			<tbody>
+				<tr>
+					<th>Activity</th>
+					<th>Amount</th>
+				</tr>
+				@if (User.History != null)
+				{
+					foreach (var transaction in User.History)
+					{
+						<tr>
+							<td>@transaction[0]</td>
+							<td>@transaction[1]</td>
+						</tr>
+					}
+				}
+			</tbody>
+		</table>
+		@if (User.History == null)
+		{
+			<span>No Transaction History</span>
+		}
+	</div>
+</div>
 
 @code {
+	bool showHistory = false;
 
+	public bool GetShowHistory()
+	{
+		return showHistory;
+	}
+
+	public void ChangeMode()
+	{
+		if (showHistory)
+		{
+			showHistory = false;
+		}
+		else
+		{
+			showHistory = true;
+		}
+	}
 }
