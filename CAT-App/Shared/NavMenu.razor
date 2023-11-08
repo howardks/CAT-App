@@ -1,4 +1,5 @@
-﻿@inject NavigationManager NavigationManager
+﻿@using CAT_App.Data;
+@inject NavigationManager NavigationManager
 
 <div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
@@ -15,6 +16,11 @@
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
                 <span class="oi oi-home" aria-hidden="true"></span> Home
+            </NavLink>
+        </div>
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="@(LoggedIn() ? "account" : "login")">
+                <span class="oi oi-person" aria-hidden="true"></span>@(LoggedIn() ? "Account" : "Login")
             </NavLink>
         </div>
         <div class="nav-item px-3">
@@ -48,5 +54,10 @@
     private void NavigateToHome()
     {
         NavigationManager.NavigateTo("");
+    }
+
+    private bool LoggedIn()
+    {
+        return User.LoggedIn;
     }
 }
