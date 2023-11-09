@@ -26,10 +26,9 @@ router.get('/users', async (req, res) => {
 });
 
 router.post('/register', async (req, res) => {
-    console.log("Query: " + req.query);
-    const username = req.query.username;
-    const password = req.query.password;
-    const passwordRepeat = req.query.passwordRepeat;
+    const username = req.body.username;
+    const password = req.body.password;
+    const passwordRepeat = req.body.passwordRepeat;
     let response;
     let responseStatus;
 
@@ -54,8 +53,8 @@ router.post('/register', async (req, res) => {
 });
 
 router.post('/login', async (req, res) => {
-    const username = req.query.username;
-    const password = req.query.password;
+    const username = req.body.username;
+    const password = req.body.password;
     let response;
     let responseStatus;
 
@@ -99,8 +98,8 @@ router.post('/login', async (req, res) => {
 });
 
 router.patch('/updateBalance', async (req, res) => { // This may be less redundant if more authentication is added
-    const username = req.query.username;
-    const password = req.query.password;
+    const username = req.body.username;
+    const password = req.body.password;
     const increase = parseFloat(req.query.increase);
     let response;
     let responseStatus;

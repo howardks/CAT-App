@@ -34,8 +34,8 @@ namespace CAT_App.Data
         {
             Console.WriteLine(name + pass + passRepeat);
 
-            Uri url = new Uri("http://10.0.0.212:3000/register");
-            httpClient.BaseAddress = url;
+            Uri apiUri = new Uri("http://10.0.0.107:3000/");
+            httpClient.BaseAddress = apiUri;
 
             var data = new
             {
@@ -43,9 +43,24 @@ namespace CAT_App.Data
                 password = pass,
                 passwordRepeat = passRepeat
             };
+			string jsonData = JsonSerializer.Serialize(data);
+			var content = new StringContent(jsonData, Encoding.UTF8, "application/json");
 
-            Console.WriteLine(data);
-        }
+			// Send the POST request
+			HttpResponseMessage response = await httpClient.PostAsync("register", content);
+			string responseBody = await response.Content.ReadAsStringAsync();
+			Console.WriteLine(responseBody);
+
+			// Check if the request was successful
+			if (response.IsSuccessStatusCode)
+			{
+				Console.WriteLine("User registered successfully!");
+			}
+			else
+			{
+				Console.WriteLine($"Error: {response.StatusCode} - {response.ReasonPhrase}");
+			}
+		}
 
         public static void UpdateBalance(double increase)
         {

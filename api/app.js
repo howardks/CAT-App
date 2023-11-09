@@ -2,6 +2,7 @@ import express from 'express';
 import routeInfo from './routes/routes.js'; 
 
 const app = express();
+app.use(express.json());
 
 const router = routeInfo.router;
 app.use('/', router);
