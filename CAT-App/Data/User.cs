@@ -1,12 +1,14 @@
 ﻿using System.Text;
 using System.Text.Json;
+using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
 
 namespace CAT_App.Data
 {
     public class User
     {
 		private static readonly HttpClient httpClient = new HttpClient();
-        private static Uri apiUri = new Uri("http://10.0.0.107:3000/");
+        private static Uri apiUri = new Uri("http://10.0.0.201:3000/");
 
         public static bool LoggedIn { get; set; } = true;
         public static string Username { get; set; } 
@@ -26,17 +28,57 @@ namespace CAT_App.Data
         }
 
         // Maybe stuff for connecting to api here? 
-        public static void Login(string name, string pass)
+        public static async Task<string> Login(string name, string pass)
         {
-            httpClient.BaseAddress = apiUri;
+            if (httpClient.BaseAddress == null || httpClient.BaseAddress.Equals(""))
+            {
+                httpClient.BaseAddress = apiUri;
+            }
 
+            // Generate data to send to API
+            var data = new
+            {
+                username = name,
+                password = pass
+            };
+            string jsonData = JsonSerializer.Serialize(data);
+            var content = new StringContent(jsonData, Encoding.UTF8, "application/json");
+            
+            // Send the POST request to /login
+            HttpResponseMessage response = await httpClient.PostAsync("login", content);
+            string responseBody = await response.Content.ReadAsStringAsync();
+            JsonNode userInfo = JsonNode.Parse(responseBody);
 
+            // Check if the request was successful
+            if (response.IsSuccessStatusCode)
+            {
+                Console.WriteLine("User logged in successfully!");
+
+                // Add the data from responseBody to the User
+                LoggedIn = true;
+                Username = name;
+                Password = pass;
+                AccountType = (string)userInfo["accountType"];
+                Balance = (double)userInfo["balance"];
+                RetrieveHistory();
+
+                return (string)userInfo["success"];
+            }
+            else
+            {
+                Console.WriteLine($"Error: {response.StatusCode} - {response.ReasonPhrase}");
+                return (string)userInfo["response"];
+            }
         }
 
-        public static async void Register(string name, string pass, string passRepeat, string aType)
+        public static async Task<string> Register(string name, string pass, string passRepeat, string aType)
         {
-            httpClient.BaseAddress = apiUri;
+            if (httpClient.BaseAddress == null || httpClient.BaseAddress.Equals(""))
+            {
+                httpClient.BaseAddress = apiUri;
+            }
 
+            // Generate data to send to API
             var data = new
             {
                 username = name,
@@ -47,38 +89,56 @@ namespace CAT_App.Data
 			string jsonData = JsonSerializer.Serialize(data);
 			var content = new StringContent(jsonData, Encoding.UTF8, "application/json");
 
-			// Send the POST request
+			// Send the POST request to /register
 			HttpResponseMessage response = await httpClient.PostAsync("register", content);
 			string responseBody = await response.Content.ReadAsStringAsync();
-			Console.WriteLine(responseBody);
+            JsonNode userInfo = JsonNode.Parse(responseBody);
 
-			// Check if the request was successful
-			if (response.IsSuccessStatusCode)
+            // Check if the request was successful
+            if (response.IsSuccessStatusCode)
 			{
 				Console.WriteLine("User registered successfully!");
-			}
+                return (string)userInfo["success"];
+            }
 			else
 			{
 				Console.WriteLine($"Error: {response.StatusCode} - {response.ReasonPhrase}");
-			}
+                return (string)userInfo["response"];
+            }
 		}
 
-        public static void IncreaseBalance(double increase)
+        public static void UpdateBalance(string transaction, double increase)
         {
-            httpClient.BaseAddress = apiUri;
 
 
         }
 
         public static void DecreaseBalance() 
         {
-            httpClient.BaseAddress = apiUri;
+            double amount = 0; 
 
+            switch (User.AccountType)
+            {
+                case "child":
+                    amount = 1.5;
+                    break;
+                case "student":
+                    amount = 2.5;
+                    break;
+                case "adult":
+                    amount = 4.0;
+                    break;
+                case "senior":
+                    amount = 2.5;
+                    break;
+            }
 
+            UpdateBalance("Bus Ride", amount);
         }
 
         public static void RetrieveHistory()
         {
+            
 
         }
 

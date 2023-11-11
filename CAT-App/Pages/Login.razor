@@ -40,26 +40,28 @@
     string username, password, passwordRepeat, accountType="adult";
     bool signUp = false;
 
-    private void LoginUser()
+    private async void LoginUser()
     {
         // Do all the registration stuff
         if (username != null && !username.Equals("") &&
             password != null && !password.Equals(""))
         {
-            User.Login(username, password);
+            string result = await User.Login(username, password);
 
             // Figure out what to do next
-
+            if (result.Equals("true"))
+            {
+                NavigationManager.NavigateTo("/account");
+            }
+            else
+            {
+                // Popup for login failed
+                Console.WriteLine(result);
+            }
         }
-
-        // Then navigate to account if user is logged in successfully
-        if (User.LoggedIn)
-        {
-            NavigationManager.NavigateTo("/account");
-        } 
         else
         {
-            // Figure out popup for failure
+            // Popup for missing fields
 
         }
     }

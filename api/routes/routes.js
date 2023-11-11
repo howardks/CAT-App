@@ -29,6 +29,7 @@ router.post('/register', async (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
     const passwordRepeat = req.body.passwordRepeat;
+    const accountType = req.body.accountType;
     let response;
     let responseStatus;
 
@@ -39,7 +40,7 @@ router.post('/register', async (req, res) => {
         const passwordHash = await bcrypt.hash(password, SALT_ROUNDS);
 
         const db = await dbPromise;
-        await db.run('INSERT INTO USER (username, password) VALUES (?, ?)', username, passwordHash
+        await db.run('INSERT INTO USER (username, password, accountType) VALUES (?, ?, ?)', username, passwordHash, accountType
         ).then(() => {
             response = { 'response': 'Registered successfully' };
             responseStatus = 201;
@@ -63,17 +64,21 @@ router.post('/login', async (req, res) => {
     await db.get('SELECT * FROM USER WHERE username=?', username
     ).then(async (row) => {
         await bcrypt.compare(password, row.password
-        ).then((result) => {
+        ).then(async (result) => {
+            const history = await db.all('SELECT * FROM HISTORY WHERE userId=?', row.id);
+
             if (result) {
                 response = {
-                    'success': true,
+                    'success': "true",
                     'username': row.username,
-                    'balance': row.balance
+                    'accountType': row.accountType,
+                    'balance': row.balance,
+                    'history': history
                 };
                 responseStatus = 200;
             } else {
                 response = {
-                    'success': false,
+                    'success': "false",
                     'response': 'Incorrect password'
                 };
                 responseStatus = 400;
