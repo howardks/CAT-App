@@ -4,9 +4,19 @@ CREATE TABLE USER (
     id INTEGER PRIMARY KEY, 
     username STRING NOT NULL, 
     password STRING NOT NULL,
+    accountType STRING NOT NULL,
     balance DOUBLE NOT NULL DEFAULT 0.0
+);
+
+CREATE TABLE HISTORY (
+    id INTEGER PRIMARY KEY,
+    userId INTEGER NOT NULL,
+    transactionType STRING NOT NULL, 
+    amount DOUBLE NOT NULL,
+    FOREIGN KEY(userId) REFERENCES USER(id)
 );
 
 -- Down
 
 DROP TABLE USER;
+DROP TABLE HISTORY;

@@ -21,6 +21,13 @@
         <br />
         <input id="passwordRepeat" type="password" placeholder="retype password" @bind-value="passwordRepeat" />
         <p />
+        <label for="type">Account Type: </label>
+        <select id="type" name="type" @bind="accountType">
+            <option value="adult">Adult</option>
+            <option value="child">Child</option>
+            <option value="student">Student</option>
+            <option value="senior">Senior</option>
+        </select>
     </div>
     <div class="flex-container">
         <input type="button" value="@(GetSignUp()? "Back" : "Login")" @onclick="@(GetSignUp()? ChangeMode : LoginUser)" />
@@ -30,37 +37,54 @@
 
 
 @code {
-    string username, password, passwordRepeat;
+    string username, password, passwordRepeat, accountType="adult";
     bool signUp = false;
 
-    private void LoginUser()
+    private async void LoginUser()
     {
-        // Do all the login stuff
-
-
-        // Then navigate to account if user is logged in successfully
-        if (User.LoggedIn)
+        // Do all the registration stuff
+        if (username != null && !username.Equals("") &&
+            password != null && !password.Equals(""))
         {
-            NavigationManager.NavigateTo("/account");
-        } 
+            string result = await User.Login(username, password);
+
+            // Figure out what to do next
+            if (result.Equals("true"))
+            {
+                NavigationManager.NavigateTo("/account", true);
+            }
+            else
+            {
+                // Popup for login failed
+                Console.WriteLine(result);
+            }
+        }
         else
         {
-            // Figure out popup for failure
+            // Popup for missing fields
 
         }
     }
 
-    private void SignUpUser()
+    private async void SignUpUser()
     {
         // Do all the registration stuff
         if (username != null && !username.Equals("") &&
             password != null && !password.Equals("") &&
             passwordRepeat != null && !passwordRepeat.Equals(""))
         {
-            User.Register(username, password, passwordRepeat);
+            string result = await User.Register(username, password, passwordRepeat, accountType);
 
             // Figure out what to do next
-
+            if (result.Equals("true"))
+            {
+                NavigationManager.NavigateTo("/login", true);
+            }
+            else
+            {
+                // Popup for login failed
+                Console.WriteLine(result);
+            }
         }
         else
         {
@@ -86,10 +110,5 @@
     private bool GetSignUp()
     {
         return signUp;
-    }
-
-    private void NavigateToSignUp()
-    {
-        NavigationManager.NavigateTo("/signup");
     }
 }
