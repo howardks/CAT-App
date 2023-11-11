@@ -27,11 +27,11 @@
 				</tr>
 				@if (User.History != null)
 				{
-					foreach (var transaction in User.History)
+					for (int i = 0; i < User.History.GetLength(0); i++)
 					{
 						<tr>
-							<td>@transaction[0]</td>
-							<td>@transaction[1]</td>
+							<td>@User.History[i, 0]</td>
+							<td>@User.History[i, 1]</td>
 						</tr>
 					}
 				}

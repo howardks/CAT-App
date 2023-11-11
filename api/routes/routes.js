@@ -41,9 +41,20 @@ router.post('/register', async (req, res) => {
 
         const db = await dbPromise;
         await db.run('INSERT INTO USER (username, password, accountType) VALUES (?, ?, ?)', username, passwordHash, accountType
-        ).then(() => {
-            response = { 'response': 'Registered successfully' };
-            responseStatus = 201;
+        ).then(async () => {
+            await db.get('SELECT * FROM USER WHERE username=?', username
+            ).then(async (row) => {
+                await db.run('INSERT INTO HISTORY (userId, transactionType, amount) VALUES (?, ?, ?)', row.id, 'Create Account', 0.0
+                ).then(async () => {
+                    const history = await db.all('SELECT * FROM HISTORY WHERE userId=?', row.id);
+
+                    response = { 
+                        'response': 'Registered successfully', 
+                        'history': history
+                    };
+                    responseStatus = 201;
+                });
+            });
         }).catch(() => {
             response = { 'response': 'Username unavailable' };
             responseStatus = 400;
@@ -102,8 +113,7 @@ router.post('/login', async (req, res) => {
     res.status(responseStatus).json(response);
 });
 
-router.patch('/updateBalance', async (req, res) => { // This may be less redundant if more authentication is added
-    console.log(req.body);
+router.patch('/updateBalance', async (req, res) => { 
     const username = req.body.username;
     const password = req.body.password;
     const transactionType = req.body.transactionType;
@@ -121,13 +131,19 @@ router.patch('/updateBalance', async (req, res) => { // This may be less redunda
                 await db.run('UPDATE USER SET balance=? WHERE username=?', [row.balance + amount, username]
                 ).then(async () => {
                     await db.get('SELECT * FROM USER WHERE username=?', username
-                    ).then((row) => {
-                        response = {
-                            'success': 'true',
-                            'username': row.username,
-                            'balance': row.balance
-                        };
-                        responseStatus = 200;
+                    ).then(async (row) => {
+                        await db.run('INSERT INTO HISTORY (userId, transactionType, amount) VALUES (?, ?, ?)', row.id, transactionType, amount
+                        ).then(async () => {
+                            const history = await db.all('SELECT * FROM HISTORY WHERE userId=?', row.id);
+                        
+                            response = {
+                                'success': 'true',
+                                'username': row.username,
+                                'balance': row.balance,
+                                'history': history
+                            };
+                            responseStatus = 200;
+                        })
                     }).catch((err4) => {
                         response = {
                             'success': 'false',

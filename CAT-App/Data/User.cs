@@ -16,7 +16,7 @@ namespace CAT_App.Data
         public static string Password { get; set; }
         public static string AccountType { get; set; }
         public static double Balance { get; set; }
-		public static string[][] History { get; set; } 
+		public static string[,] History { get; set; } 
 
         public static void Logout()
         {
@@ -49,9 +49,10 @@ namespace CAT_App.Data
             HttpResponseMessage response = await httpClient.PostAsync("login", content);
             string responseBody = await response.Content.ReadAsStringAsync();
             JsonNode userInfo = JsonNode.Parse(responseBody);
+			Console.WriteLine(responseBody);
 
-            // Check if the request was successful
-            if (response.IsSuccessStatusCode)
+			// Check if the request was successful
+			if (response.IsSuccessStatusCode)
             {
                 Console.WriteLine("User logged in successfully!");
 
@@ -61,7 +62,7 @@ namespace CAT_App.Data
                 Password = pass;
                 AccountType = (string)userInfo["accountType"];
                 Balance = (double)userInfo["balance"];
-                RetrieveHistory();
+                RetrieveHistory((JsonNode)userInfo["history"]);
 
                 return (string)userInfo["success"];
             }
@@ -121,7 +122,7 @@ namespace CAT_App.Data
             string jsonData = JsonSerializer.Serialize(data);
             var content = new StringContent(jsonData, Encoding.UTF8, "application/json");
 
-            // Send the POST request to /updateBalance
+            // Send the PATCH request to /updateBalance
             HttpResponseMessage response = await httpClient.PatchAsync("updateBalance", content);
             string responseBody = await response.Content.ReadAsStringAsync();
             JsonNode userInfo = JsonNode.Parse(responseBody);
@@ -133,9 +134,9 @@ namespace CAT_App.Data
 
                 // Add the data from responseBody to the User
                 Balance = (double)userInfo["balance"];
-                RetrieveHistory();
+				RetrieveHistory((JsonNode)userInfo["history"]);
 
-                return (string)userInfo["success"];
+				return (string)userInfo["success"];
             }
             else
             {
@@ -177,10 +178,18 @@ namespace CAT_App.Data
 
         }
 
-        public static void RetrieveHistory()
+        public static void RetrieveHistory(JsonNode historyList)
         {
-            
+            JsonArray historyArray = historyList.AsArray();
+            string[,] userHistory = new string[historyArray.Count, 2];
 
+            for (int i = 0; i < historyArray.Count; i++)
+            {
+                userHistory[i, 0] = historyArray[i]["transactionType"].ToString();
+                userHistory[i, 1] = historyArray[i]["amount"].ToString();
+            }
+
+            User.History = userHistory;
         }
 
         public static string GetBalance()

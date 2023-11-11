@@ -51,7 +51,7 @@
             // Figure out what to do next
             if (result.Equals("true"))
             {
-                NavigationManager.NavigateTo("/account");
+                NavigationManager.NavigateTo("/account", true);
             }
             else
             {
@@ -73,10 +73,18 @@
             password != null && !password.Equals("") &&
             passwordRepeat != null && !passwordRepeat.Equals(""))
         {
-            await User.Register(username, password, passwordRepeat, accountType);
+            string result = await User.Register(username, password, passwordRepeat, accountType);
 
             // Figure out what to do next
-
+            if (result.Equals("true"))
+            {
+                NavigationManager.NavigateTo("/login", true);
+            }
+            else
+            {
+                // Popup for login failed
+                Console.WriteLine(result);
+            }
         }
         else
         {
@@ -102,10 +110,5 @@
     private bool GetSignUp()
     {
         return signUp;
-    }
-
-    private void NavigateToSignUp()
-    {
-        NavigationManager.NavigateTo("/signup");
     }
 }
