@@ -10,13 +10,27 @@
 	<br />
 	Hold Pass Next To Scanner
 	<p />
-	<img src="/images/adultCard.png" />
+	@if (User.AccountType.Equals("adult"))
+	{
+		<img src="/images/adultCard.png" />
+	} else if (User.AccountType.Equals("child"))
+	{
+		<img src="/images/childCard.png" />
+	}
+	else if (User.AccountType.Equals("senior"))
+	{
+		<img src="/images/seniorCard.png" />
+	}
+	else if (User.AccountType.Equals("student"))
+	{
+		<img src="/images/studentCard.png" />
+	}
 	<p />
 	Current Balance
 	<h3>@User.GetBalance()</h3>
 	<p />
-	<button>Reload Card</button>
-	<button @onclick="@ChangeMode">@(GetShowHistory() ? "Hide History" : "Show History")</button>
+	<button @onclick="@ChangeReloadMode">@(GetShowReload() ? "Close" : "Reload Card")</button>
+	<button @onclick="@ChangeHistoryMode">@(GetShowHistory() ? "Hide History" : "Show History")</button>
 	<div class="@(GetShowHistory()? "d-show" : "d-none")">
 		<p />
 		<table class="table">
@@ -42,10 +56,20 @@
 			<span>No Transaction History</span>
 		}
 	</div>
+	<div class="@(GetShowReload()? "d-show" : "d-none") p-3">
+		<form>
+			<label for="amount">Amount: </label>
+			<br />
+			<input id="amount" type="number" placeholder="0.00" @bind-value="increaseAmount" />
+			<button class="m-2" @onclick="@ReloadCard">Submit</button>
+		</form>
+	</div>
 </div>
 
 @code {
 	bool showHistory = false;
+	bool showReload = false;
+	double increaseAmount;
 
 	private async void ChargeRide()
 	{
@@ -62,13 +86,25 @@
 		}
 	}
 
+	private async void ReloadCard()
+	{
+		string result = await User.UpdateBalance("Reload Card", increaseAmount);
+	}
+
 	private bool GetShowHistory()
 	{
 		return showHistory;
 	}
 
-	private void ChangeMode()
+	private bool GetShowReload()
 	{
+		return showReload;
+	}
+
+	private void ChangeHistoryMode()
+	{
+		showReload = false; 
+
 		if (showHistory)
 		{
 			showHistory = false;
@@ -76,6 +112,20 @@
 		else
 		{
 			showHistory = true;
+		}
+	}
+
+	private void ChangeReloadMode()
+	{
+		showHistory = false;
+
+		if (showReload)
+		{
+			showReload = false;
+		}
+		else
+		{
+			showReload = true;
 		}
 	}
 }
