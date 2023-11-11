@@ -79,6 +79,10 @@ main {
     width: 100%;
 }
 
+.content ::deep select {
+    margin-bottom: 16px;
+}
+
 .footer ::deep .flex-container {
     width: 100%;
     display: flex;

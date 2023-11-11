@@ -6,11 +6,12 @@ namespace CAT_App.Data
     public class User
     {
 		private static readonly HttpClient httpClient = new HttpClient();
+        private static Uri apiUri = new Uri("http://10.0.0.107:3000/");
 
-		public static bool LoggedIn { get; set; } = true;
+        public static bool LoggedIn { get; set; } = true;
         public static string Username { get; set; } 
         public static string Password { get; set; }
-        public static string Type { get; set; }
+        public static string AccountType { get; set; }
         public static double Balance { get; set; }
 		public static string[][] History { get; set; } 
 
@@ -19,7 +20,7 @@ namespace CAT_App.Data
             LoggedIn = false;
             Username = null;
             Password = null;
-            Type = null;
+            AccountType = null;
             Balance = 0;
             History = null;
         }
@@ -27,21 +28,21 @@ namespace CAT_App.Data
         // Maybe stuff for connecting to api here? 
         public static void Login(string name, string pass)
         {
+            httpClient.BaseAddress = apiUri;
+
 
         }
 
-        public static async void Register(string name, string pass, string passRepeat)
+        public static async void Register(string name, string pass, string passRepeat, string aType)
         {
-            Console.WriteLine(name + pass + passRepeat);
-
-            Uri apiUri = new Uri("http://10.0.0.107:3000/");
             httpClient.BaseAddress = apiUri;
 
             var data = new
             {
                 username = name,
                 password = pass,
-                passwordRepeat = passRepeat
+                passwordRepeat = passRepeat,
+                accountType = aType
             };
 			string jsonData = JsonSerializer.Serialize(data);
 			var content = new StringContent(jsonData, Encoding.UTF8, "application/json");
@@ -62,7 +63,21 @@ namespace CAT_App.Data
 			}
 		}
 
-        public static void UpdateBalance(double increase)
+        public static void IncreaseBalance(double increase)
+        {
+            httpClient.BaseAddress = apiUri;
+
+
+        }
+
+        public static void DecreaseBalance() 
+        {
+            httpClient.BaseAddress = apiUri;
+
+
+        }
+
+        public static void RetrieveHistory()
         {
 
         }
