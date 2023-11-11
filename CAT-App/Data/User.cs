@@ -2,6 +2,7 @@
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
+using System.Xml.Linq;
 
 namespace CAT_App.Data
 {
@@ -10,7 +11,7 @@ namespace CAT_App.Data
 		private static readonly HttpClient httpClient = new HttpClient();
         private static Uri apiUri = new Uri("http://10.0.0.201:3000/");
 
-        public static bool LoggedIn { get; set; } = true;
+        public static bool LoggedIn { get; set; } = false;
         public static string Username { get; set; } 
         public static string Password { get; set; }
         public static string AccountType { get; set; }
@@ -107,33 +108,73 @@ namespace CAT_App.Data
             }
 		}
 
-        public static void UpdateBalance(string transaction, double increase)
+        public static async Task<string> UpdateBalance(string transaction, double changeAmount)
         {
+            // Generate data to send to API
+            var data = new
+            {
+                username = User.Username,
+                password = User.Password,
+                transactionType = transaction, 
+                amount = changeAmount
+            };
+            string jsonData = JsonSerializer.Serialize(data);
+            var content = new StringContent(jsonData, Encoding.UTF8, "application/json");
 
+            // Send the POST request to /updateBalance
+            HttpResponseMessage response = await httpClient.PatchAsync("updateBalance", content);
+            string responseBody = await response.Content.ReadAsStringAsync();
+            JsonNode userInfo = JsonNode.Parse(responseBody);
+
+            // Check if the request was successful
+            if (response.IsSuccessStatusCode)
+            {
+                Console.WriteLine("Balance updated successfully!");
+
+                // Add the data from responseBody to the User
+                Balance = (double)userInfo["balance"];
+                RetrieveHistory();
+
+                return (string)userInfo["success"];
+            }
+            else
+            {
+                Console.WriteLine($"Error: {response.StatusCode} - {response.ReasonPhrase}");
+                Console.WriteLine((string)userInfo["response"]);
+                return (string)userInfo["response"];
+            }
 
         }
 
-        public static void DecreaseBalance() 
+        public static async Task<string> DecreaseBalance() 
         {
             double amount = 0; 
 
             switch (User.AccountType)
             {
                 case "child":
-                    amount = 1.5;
+                    amount = -1.5;
                     break;
                 case "student":
-                    amount = 2.5;
+                    amount = -2.5;
                     break;
                 case "adult":
-                    amount = 4.0;
+                    amount = -4.0;
                     break;
                 case "senior":
-                    amount = 2.5;
+                    amount = -2.5;
                     break;
             }
 
-            UpdateBalance("Bus Ride", amount);
+            if (User.Balance + amount >= 0)
+            {
+                return await UpdateBalance("Bus Ride", amount);
+            }
+            else
+            {
+                return "Not enoungh funds\nPlease reload card";
+            }
+
         }
 
         public static void RetrieveHistory()

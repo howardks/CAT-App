@@ -66,14 +66,14 @@
         }
     }
 
-    private void SignUpUser()
+    private async void SignUpUser()
     {
         // Do all the registration stuff
         if (username != null && !username.Equals("") &&
             password != null && !password.Equals("") &&
             passwordRepeat != null && !passwordRepeat.Equals(""))
         {
-            User.Register(username, password, passwordRepeat, accountType);
+            await User.Register(username, password, passwordRepeat, accountType);
 
             // Figure out what to do next
 

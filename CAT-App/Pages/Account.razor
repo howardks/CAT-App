@@ -1,11 +1,12 @@
 ﻿@page "/account"
 
+@inject NavigationManager NavigationManager
 @using CAT_App.Data;
 
 <h3>Welcome, @User.Username!</h3>
 <p />
 <div width="100%" style="text-align: center">
-	<span class="oi oi-wifi" style="padding: 2%; width: 10%; margin-bottom: 3%" @onclick="@User.DecreaseBalance"/>
+	<span class="oi oi-wifi" style="padding: 2%; width: 10%; margin-bottom: 3%" @onclick="ChargeRide"/>
 	<br />
 	Hold Pass Next To Scanner
 	<p />
@@ -46,12 +47,27 @@
 @code {
 	bool showHistory = false;
 
-	public bool GetShowHistory()
+	private async void ChargeRide()
+	{
+		string result = await User.DecreaseBalance();
+
+		if (result.Equals("true"))
+		{
+			NavigationManager.NavigateTo("/account", true);
+		}
+		else
+		{
+			// Popup for update balance failed
+
+		}
+	}
+
+	private bool GetShowHistory()
 	{
 		return showHistory;
 	}
 
-	public void ChangeMode()
+	private void ChangeMode()
 	{
 		if (showHistory)
 		{

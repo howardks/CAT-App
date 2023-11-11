@@ -103,9 +103,11 @@ router.post('/login', async (req, res) => {
 });
 
 router.patch('/updateBalance', async (req, res) => { // This may be less redundant if more authentication is added
+    console.log(req.body);
     const username = req.body.username;
     const password = req.body.password;
-    const increase = parseFloat(req.query.increase);
+    const transactionType = req.body.transactionType;
+    const amount = parseFloat(req.body.amount);
     let response;
     let responseStatus;
 
@@ -116,47 +118,47 @@ router.patch('/updateBalance', async (req, res) => { // This may be less redunda
         await bcrypt.compare(password, row.password
         ).then(async (result) => {
             if (result) {
-                await db.run('UPDATE USER SET balance=? WHERE username=?', [row.balance + increase, username]
+                await db.run('UPDATE USER SET balance=? WHERE username=?', [row.balance + amount, username]
                 ).then(async () => {
                     await db.get('SELECT * FROM USER WHERE username=?', username
                     ).then((row) => {
                         response = {
-                            'success': true,
+                            'success': 'true',
                             'username': row.username,
                             'balance': row.balance
                         };
                         responseStatus = 200;
                     }).catch((err4) => {
                         response = {
-                            'success': false,
+                            'success': 'false',
                             'response': 'Error retrieving user'
                         };
                         responseStatus = 400;
                     });
                 }).catch((err3) => {
                     response = {
-                        'success': false,
+                        'success': 'false',
                         'response': 'Error updating balance'
                     };
                     responseStatus = 400;
                 });
             } else {
                 response = {
-                    'success': false,
+                    'success': 'false',
                     'response': 'Incorrect password'
                 };
                 responseStatus = 400;
             }
         }).catch((err2) => {
             response = {
-                'success': false,
+                'success': 'false',
                 'response': 'Missing password'
             };
             responseStatus = 400;
         });
     }).catch((err) => {
         response = {
-            'success': false,
+            'success': 'false',
             'response': 'Username does not exist'
         };
         responseStatus = 400;
