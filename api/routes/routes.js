@@ -49,14 +49,17 @@ router.post('/register', async (req, res) => {
                     const history = await db.all('SELECT * FROM HISTORY WHERE userId=?', row.id);
 
                     response = { 
-                        'response': 'Registered successfully', 
+                        'success': 'true', 
                         'history': history
                     };
                     responseStatus = 201;
                 });
             });
         }).catch(() => {
-            response = { 'response': 'Username unavailable' };
+            response = { 
+                'success': 'false',
+                'response': 'Username unavailable' 
+            };
             responseStatus = 400;
         });
     }
