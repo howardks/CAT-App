@@ -36,7 +36,7 @@
         </div>
 	</form>
 </div>
-<div class="@(GetError()? "d-show" : "d-none")">
+<div class="@(GetError()? "d-show" : "d-none") text-center">
     <p>@message</p>
     <button @onclick="@ClearError">Back</button>
 </div>
