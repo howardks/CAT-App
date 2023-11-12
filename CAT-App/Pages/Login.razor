@@ -7,38 +7,46 @@
 <p />
 <h4>@(GetSignUp() ? "Sign Up" : "Login")</h4>
 <p />
-<form class="login-form">
-    <label for="username">Username: </label>
-    <br />
-    <input id="username" type="text" placeholder="username" @bind-value="username"/>
-    <p />
-    <label for="password">Password: </label>
-    <br />
-    <input id="password" type="password" placeholder="password" @bind-value="password"/>
-    <p />
-    <div class="@(GetSignUp()? "d-show" : "d-none")">
-        <label for="passwordRepeat">Retype Password: </label>
+<div class="@(GetError()? "d-none" : "d-show")">
+    <form class="login-form">
+        <label for="username">Username: </label>
         <br />
-        <input id="passwordRepeat" type="password" placeholder="retype password" @bind-value="passwordRepeat" />
+        <input id="username" type="text" placeholder="username" @bind-value="username"/>
         <p />
-        <label for="type">Account Type: </label>
-        <select id="type" name="type" @bind="accountType">
-            <option value="adult">Adult</option>
-            <option value="child">Child</option>
-            <option value="student">Student</option>
-            <option value="senior">Senior</option>
-        </select>
-    </div>
-    <div class="flex-container">
-        <input type="button" value="@(GetSignUp()? "Back" : "Login")" @onclick="@(GetSignUp()? ChangeMode : LoginUser)" />
-        <input type="button" value="Sign Up" @onclick="@(GetSignUp()? SignUpUser : ChangeMode)" />
-    </div>
-</form>
+        <label for="password">Password: </label>
+        <br />
+        <input id="password" type="password" placeholder="password" @bind-value="password"/>
+        <p />
+        <div class="@(GetSignUp()? "d-show" : "d-none")">
+            <label for="passwordRepeat">Retype Password: </label>
+            <br />
+            <input id="passwordRepeat" type="password" placeholder="retype password" @bind-value="passwordRepeat" />
+            <p />
+            <label for="type">Account Type: </label>
+            <select id="type" name="type" @bind="accountType">
+                <option value="adult">Adult</option>
+                <option value="child">Child</option>
+                <option value="student">Student</option>
+                <option value="senior">Senior</option>
+            </select>
+        </div>
+        <div class="flex-container">
+            <input type="button" value="@(GetSignUp()? "Back" : "Login")" @onclick="@(GetSignUp()? ChangeMode : LoginUser)" />
+            <input type="button" value="Sign Up" @onclick="@(GetSignUp()? SignUpUser : ChangeMode)" />
+        </div>
+	</form>
+</div>
+<div class="@(GetError()? "d-show" : "d-none")">
+    <p>@message</p>
+    <button @onclick="@ClearError">Back</button>
+</div>
 
 
 @code {
-    string username, password, passwordRepeat, accountType="adult";
+    string username, password, passwordRepeat, accountType = "adult"; 
+    static string message;
     bool signUp = false;
+    static bool error = false;
 
     private async void LoginUser()
     {
@@ -55,14 +63,15 @@
             }
             else
             {
-                // Popup for login failed
-                Console.WriteLine(result);
+                message = result;
+                error = true;
+                NavigationManager.NavigateTo("/login", true);
             }
         }
         else
         {
-            // Popup for missing fields
-
+            message = "Please fill out all fields";
+            error = true;
         }
     }
 
@@ -82,15 +91,22 @@
             }
             else
             {
-                // Popup for login failed
-                Console.WriteLine(result);
+                message = result;
+                error = true;
+                NavigationManager.NavigateTo("/login", true);
             }
         }
         else
         {
-            // Figure out popup for empty fields
-
+            message = "Please fill out all fields";
+            error = true;
         }
+    }
+
+    private void ClearError()
+    {
+        error = false;
+        message = null;
     }
 
     private void ChangeMode()
@@ -110,5 +126,10 @@
     private bool GetSignUp()
     {
         return signUp;
+    }
+
+    private bool GetError()
+    {
+        return error;
     }
 }

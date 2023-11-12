@@ -58,7 +58,7 @@ router.post('/register', async (req, res) => {
         }).catch(() => {
             response = { 
                 'success': 'false',
-                'response': 'Username unavailable' 
+                'response': 'Username unavailable. Please choose a different username.' 
             };
             responseStatus = 400;
         });
@@ -93,14 +93,14 @@ router.post('/login', async (req, res) => {
             } else {
                 response = {
                     'success': "false",
-                    'response': 'Incorrect password'
+                    'response': 'Incorrect password. Please re-enter your password.'
                 };
                 responseStatus = 400;
             }
         }).catch((err2) => {
             response = {
                 'success': false,
-                'response': 'Missing password'
+                'response': 'Missing password. Please enter your password.'
             };
             responseStatus = 400;
         });
@@ -108,7 +108,7 @@ router.post('/login', async (req, res) => {
     }).catch((err) => {
         response = {
             'success': false,
-            'response': 'Username does not exist'
+            'response': 'Username does not exist. Please sign up if you do not have an account yet or re-enter your username.'
         };
         responseStatus = 400;
     });
@@ -131,54 +131,62 @@ router.patch('/updateBalance', async (req, res) => {
         await bcrypt.compare(password, row.password
         ).then(async (result) => {
             if (result) {
-                await db.run('UPDATE USER SET balance=? WHERE username=?', [row.balance + amount, username]
-                ).then(async () => {
-                    await db.get('SELECT * FROM USER WHERE username=?', username
-                    ).then(async (row) => {
-                        await db.run('INSERT INTO HISTORY (userId, transactionType, amount) VALUES (?, ?, ?)', row.id, transactionType, amount
-                        ).then(async () => {
-                            const history = await db.all('SELECT * FROM HISTORY WHERE userId=?', row.id);
-                        
+                if (row.balance + amount >= 0) {
+                    await db.run('UPDATE USER SET balance=? WHERE username=?', [row.balance + amount, username]
+                    ).then(async () => {
+                        await db.get('SELECT * FROM USER WHERE username=?', username
+                        ).then(async (row) => {
+                            await db.run('INSERT INTO HISTORY (userId, transactionType, amount) VALUES (?, ?, ?)', row.id, transactionType, amount
+                            ).then(async () => {
+                                const history = await db.all('SELECT * FROM HISTORY WHERE userId=?', row.id);
+                            
+                                response = {
+                                    'success': 'true',
+                                    'username': row.username,
+                                    'balance': row.balance,
+                                    'history': history
+                                };
+                                responseStatus = 200;
+                            })
+                        }).catch((err4) => {
                             response = {
-                                'success': 'true',
-                                'username': row.username,
-                                'balance': row.balance,
-                                'history': history
+                                'success': 'false',
+                                'response': 'Error retrieving user. Please contact the app administrator at 555-555-5555.'
                             };
-                            responseStatus = 200;
-                        })
-                    }).catch((err4) => {
+                            responseStatus = 400;
+                        });
+                    }).catch((err3) => {
                         response = {
                             'success': 'false',
-                            'response': 'Error retrieving user'
+                            'response': 'Error updating balance. Please contact the app administrator at 555-555-5555.'
                         };
                         responseStatus = 400;
                     });
-                }).catch((err3) => {
+                } else {
                     response = {
                         'success': 'false',
-                        'response': 'Error updating balance'
+                        'response': 'Not enoungh funds. Please reload card.'
                     };
                     responseStatus = 400;
-                });
+                }
             } else {
                 response = {
                     'success': 'false',
-                    'response': 'Incorrect password'
+                    'response': 'Incorrect password. Please re-enter your password.'
                 };
                 responseStatus = 400;
             }
         }).catch((err2) => {
             response = {
                 'success': 'false',
-                'response': 'Missing password'
+                'response': 'Missing password. Please contact the app administrator at 555-555-5555.'
             };
             responseStatus = 400;
         });
     }).catch((err) => {
         response = {
             'success': 'false',
-            'response': 'Username does not exist'
+            'response': 'Username does not exist. Please contact the app administrator at 555-555-5555.'
         };
         responseStatus = 400;
     });
