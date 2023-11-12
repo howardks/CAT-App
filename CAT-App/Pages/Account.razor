@@ -3,10 +3,10 @@
 @inject NavigationManager NavigationManager
 @using CAT_App.Data;
 
-<h3>Welcome, @User.Username!</h3>
+<h3>@(GetError()? "Error" : "Welcome, " + @User.Username + "!")</h3>
 <p />
-<div class="@(GetError()? "d-none" : "d-show")" width="100%" style="text-align: center">
-	<span class="oi oi-wifi" style="padding: 2%; width: 10%; margin-bottom: 3%" @onclick="ChargeRide"/>
+<div class="@(GetError()? "d-none" : "d-show") text-center" width="100%">
+	<span class="oi oi-wifi p-2 mb-2" width="10%" @onclick="ChargeRide"/>
 	<br />
 	Hold Pass Next To Scanner
 	<p />
@@ -60,12 +60,12 @@
 		<form>
 			<label for="amount">Amount: </label>
 			<br />
-			<input id="amount" type="number" placeholder="0.00" @bind-value="increaseAmount" />
+			<input id="amount" type="number" @bind-value="increaseAmount" />
 			<button class="m-2" @onclick="@ReloadCard">Submit</button>
 		</form>
 	</div>
 </div>
-<div class="@(GetError()? "d-show" : "d-none")">
+<div class="@(GetError()? "d-show" : "d-none") text-center">
 	<p>@message</p>
 	<button @onclick="@ClearError">Back</button>
 </div>
