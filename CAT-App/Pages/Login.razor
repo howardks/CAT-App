@@ -5,7 +5,7 @@
 
 <img src="/images/fountain.jpg" />
 <p />
-<h4>@(GetSignUp() ? "Sign Up" : "Login")</h4>
+<h4>@(GetError() ? "Error" : (GetSignUp() ? "Sign Up" : "Login"))</h4>
 <p />
 <div class="@(GetError()? "d-none" : "d-show")">
     <form class="login-form">
