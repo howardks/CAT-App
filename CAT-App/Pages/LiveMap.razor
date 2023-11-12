@@ -1,7 +1,19 @@
 ﻿@page "/livemap"
 
 <h3>LiveMap</h3>
-
+<!--
+	This iframe solution works, but it does not allow overlays
+	so it is not a good permanent solution. 
+-->
+<div style="text-align: center">
+	<iframe width="340"
+			height="610"
+			frameborder="0" style="border:0"
+			referrerpolicy="no-referrer-when-downgrade"
+			src="https://www.google.com/maps/embed/v1/view?key=AIzaSyDK_X7SbwjqHjb6oLCoiVy6n6Q0xGCrq0k&center=32.0809,-81.0912&zoom=15"
+			allowfullscreen>
+	</iframe>
+</div>
 @code {
 
 }
