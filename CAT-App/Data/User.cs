@@ -69,6 +69,7 @@ namespace CAT_App.Data
             else
             {
                 Console.WriteLine($"Error: {response.StatusCode} - {response.ReasonPhrase}");
+                
                 return (string)userInfo["response"];
             }
         }
@@ -141,7 +142,6 @@ namespace CAT_App.Data
             else
             {
                 Console.WriteLine($"Error: {response.StatusCode} - {response.ReasonPhrase}");
-                Console.WriteLine((string)userInfo["response"]);
                 return (string)userInfo["response"];
             }
 
@@ -167,15 +167,7 @@ namespace CAT_App.Data
                     break;
             }
 
-            if (User.Balance + amount >= 0)
-            {
-                return await UpdateBalance("Bus Ride", amount);
-            }
-            else
-            {
-                return "Not enoungh funds\nPlease reload card";
-            }
-
+            return await UpdateBalance("Bus Ride", amount);
         }
 
         public static void RetrieveHistory(JsonNode historyList)
