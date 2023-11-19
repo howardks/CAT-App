@@ -35,7 +35,7 @@
     {
         var defaultCoordinates = routeCoordinates.FirstOrDefault();
 
-        await JSRuntime.InvokeVoidAsync("initializeMap", googleMapsApiKey, defaultCoordinates);
+        await JSRuntime.InvokeVoidAsync("initializeMap", "[API Key]", defaultCoordinates);
         await JSRuntime.InvokeVoidAsync("initializeMarker", defaultCoordinates);
 
         await JSRuntime.InvokeVoidAsync("loadRoute", routeCoordinates);
