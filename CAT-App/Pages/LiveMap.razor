@@ -1,19 +1,43 @@
 ﻿@page "/livemap"
+@inject IJSRuntime JSRuntime
+@inject GoogleMapsService MapsService
 
-<h3>LiveMap</h3>
-<!--
-	This iframe solution works, but it does not allow overlays
-	so it is not a good permanent solution. 
--->
-<div style="text-align: center">
-	<iframe width="340"
-			height="610"
-			frameborder="0" style="border:0"
-			referrerpolicy="no-referrer-when-downgrade"
-			src="https://www.google.com/maps/embed/v1/view?key=AIzaSyDK_X7SbwjqHjb6oLCoiVy6n6Q0xGCrq0k&center=32.0809,-81.0912&zoom=15"
-			allowfullscreen>
-	</iframe>
-</div>
+<h3>Live Map</h3>
+
+<div id="map" style="width: 100%; height: 600px;"></div>
+
 @code {
+    private List<Coordinate> routeCoordinates;
+    private bool isMapInitialized = false;
+    private static readonly string googleMapsApiKey = "[API Key]";
+    private bool mapInitializationAttempted = false;
 
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        string origin = "32.082121526463816,-81.09554662679852";
+        string destination = "32.07412809417009,-81.09132416440042";
+
+        routeCoordinates = await MapsService.ExtractCoordinatesAsync(origin, destination);
+    }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!mapInitializationAttempted && routeCoordinates != null && routeCoordinates.Any())
+        {
+            mapInitializationAttempted = true;
+            await InitializeMapAndRoute();
+        }
+    }
+
+
+    private async Task InitializeMapAndRoute()
+    {
+        var defaultCoordinates = routeCoordinates.FirstOrDefault();
+
+        await JSRuntime.InvokeVoidAsync("initializeMap", googleMapsApiKey, defaultCoordinates);
+        await JSRuntime.InvokeVoidAsync("initializeMarker", defaultCoordinates);
+
+        await JSRuntime.InvokeVoidAsync("loadRoute", routeCoordinates);
+    }
 }
