@@ -361,3 +361,7 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+.DS_Store
+CAT-App/.DS_Store
+CAT-App/Resources/.DS_Store
+CAT-App/wwwroot/.DS_Store
