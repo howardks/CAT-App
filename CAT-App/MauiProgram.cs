@@ -24,6 +24,9 @@ namespace CAT_App
 
             builder.Services.AddSingleton<WeatherForecastService>();
 
+            builder.Services.AddSingleton<GoogleMapsService>(sp =>
+            new GoogleMapsService(new HttpClient(), "[API Key]"));
+
             return builder.Build();
         }
     }
