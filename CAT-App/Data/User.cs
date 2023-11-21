@@ -9,7 +9,7 @@ namespace CAT_App.Data
     public class User
     {
 		private static readonly HttpClient httpClient = new HttpClient();
-        private static Uri apiUri = new Uri("http://10.0.0.201:3000/");
+        private static Uri apiUri = new Uri("http://10.0.0.107:3000/");
 
         public static bool LoggedIn { get; set; } = false;
         public static string Username { get; set; } 
@@ -178,7 +178,7 @@ namespace CAT_App.Data
             for (int i = 0; i < historyArray.Count; i++)
             {
                 userHistory[i, 0] = historyArray[i]["transactionType"].ToString();
-                userHistory[i, 1] = historyArray[i]["amount"].ToString();
+                userHistory[i, 1] = String.Format("{0:C2}", Int64.Parse(historyArray[i]["amount"].ToString()));
             }
 
             User.History = userHistory;
