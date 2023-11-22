@@ -9,7 +9,7 @@ namespace CAT_App.Data
     public class User
     {
 		private static readonly HttpClient httpClient = new HttpClient();
-        private static Uri apiUri = new Uri("http://10.0.0.107:3000/");
+        private static Uri apiUri = new Uri("http://10.0.0.201:3000/"); // This must be replaced with your LocalHost ipv4 address
 
         public static bool LoggedIn { get; set; } = false;
         public static string Username { get; set; } 
@@ -27,10 +27,10 @@ namespace CAT_App.Data
             Balance = 0;
             History = null;
         }
-
-        // Maybe stuff for connecting to api here? 
+ 
         public static async Task<string> Login(string name, string pass)
         {
+            // Set base address if it is not already set
             if (httpClient.BaseAddress == null || httpClient.BaseAddress.Equals(""))
             {
                 httpClient.BaseAddress = apiUri;
@@ -66,7 +66,7 @@ namespace CAT_App.Data
 
                 return (string)userInfo["success"];
             }
-            else
+            else // Error
             {
                 Console.WriteLine($"Error: {response.StatusCode} - {response.ReasonPhrase}");
                 
@@ -76,6 +76,7 @@ namespace CAT_App.Data
 
         public static async Task<string> Register(string name, string pass, string passRepeat, string aType)
         {
+            // Set base address if it is not already set
             if (httpClient.BaseAddress == null || httpClient.BaseAddress.Equals(""))
             {
                 httpClient.BaseAddress = apiUri;
@@ -103,7 +104,7 @@ namespace CAT_App.Data
 				Console.WriteLine("User registered successfully!");
                 return (string)userInfo["success"];
             }
-			else
+			else // Error
 			{
 				Console.WriteLine($"Error: {response.StatusCode} - {response.ReasonPhrase}");
                 return (string)userInfo["response"];
@@ -139,7 +140,7 @@ namespace CAT_App.Data
 
 				return (string)userInfo["success"];
             }
-            else
+            else // Error
             {
                 Console.WriteLine($"Error: {response.StatusCode} - {response.ReasonPhrase}");
                 return (string)userInfo["response"];
@@ -149,6 +150,7 @@ namespace CAT_App.Data
 
         public static async Task<string> DecreaseBalance() 
         {
+            // Decrease the balance by the fare amount for the account type
             double amount = 0; 
 
             switch (User.AccountType)
@@ -172,13 +174,14 @@ namespace CAT_App.Data
 
         public static void RetrieveHistory(JsonNode historyList)
         {
+            // Retrieve the transaction history for the account
             JsonArray historyArray = historyList.AsArray();
             string[,] userHistory = new string[historyArray.Count, 2];
 
             for (int i = 0; i < historyArray.Count; i++)
             {
                 userHistory[i, 0] = historyArray[i]["transactionType"].ToString();
-                userHistory[i, 1] = String.Format("{0:C2}", Int64.Parse(historyArray[i]["amount"].ToString()));
+                userHistory[i, 1] = String.Format("{0:C2}", Double.Parse(historyArray[i]["amount"].ToString()));
             }
 
             User.History = userHistory;
@@ -186,6 +189,7 @@ namespace CAT_App.Data
 
         public static string GetBalance()
         {
+            // Format the balance as currency
             return String.Format("{0:C2}", Balance);
         }
     }

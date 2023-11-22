@@ -2,6 +2,7 @@
 {
 	public class NewsItem
 	{
+		// News item attributes
 		public DateTime DateTime { get; set; }
 		public string Story { get; set; }
 

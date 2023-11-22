@@ -2,6 +2,7 @@
 {
     public class Route
     {
+        // Route attributes
         public string Symbol { get; set; }
         public string Name { get; set; }
         public Color Color { get; set; }

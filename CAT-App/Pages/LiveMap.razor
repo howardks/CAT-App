@@ -33,9 +33,10 @@
 
     private async Task InitializeMapAndRoute()
     {
+        string googleMapsApiKey = ""; // This must be replaced with a Google Maps API key with the Maps JavaScript API enabled.
         var defaultCoordinates = routeCoordinates.FirstOrDefault();
 
-        await JSRuntime.InvokeVoidAsync("initializeMap", "[API Key]", defaultCoordinates);
+        await JSRuntime.InvokeVoidAsync("initializeMap", googleMapsApiKey, defaultCoordinates);
         await JSRuntime.InvokeVoidAsync("initializeMarker", defaultCoordinates);
 
         await JSRuntime.InvokeVoidAsync("loadRoute", routeCoordinates);

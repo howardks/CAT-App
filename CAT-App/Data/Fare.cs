@@ -2,6 +2,7 @@
 {
     public class Fare
     {
+        // Fare attributes
         public string Type { get; set; }
         public double Cost { get; set; }
 

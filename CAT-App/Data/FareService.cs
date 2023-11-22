@@ -2,6 +2,7 @@
 {
     public class FareService
     {
+        // Fares based on account types
         public static readonly Fare[] fares = new[]
         {
             new Fare("Child", 1.5), 
