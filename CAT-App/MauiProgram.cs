@@ -18,13 +18,14 @@ namespace CAT_App
             builder.Services.AddMauiBlazorWebView();
 
 #if DEBUG
-		builder.Services.AddBlazorWebViewDeveloperTools();
-		builder.Logging.AddDebug();
+		    builder.Services.AddBlazorWebViewDeveloperTools();
+		    builder.Logging.AddDebug();
 #endif
 
+            string googleMapsApiKey = ""; // This must be replaced with a Google Maps API key with the Maps JavaScript API enabled. 
 
             builder.Services.AddSingleton<GoogleMapsService>(sp =>
-            new GoogleMapsService(new HttpClient(), "[API Key]"));
+            new GoogleMapsService(new HttpClient(), googleMapsApiKey));
 
             return builder.Build();
         }

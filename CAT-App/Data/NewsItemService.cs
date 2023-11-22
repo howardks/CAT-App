@@ -2,6 +2,7 @@
 {
 	public class NewsItemService
 	{
+		// Current news items
 		public static readonly NewsItem[] news = new[]
 		{
 			new NewsItem(new DateTime(2023, 10, 7, 18, 01, 0), "75 year old cat lady attempted to bring her 12 cats aboard bus 12 today; ended in catastrophe."),
